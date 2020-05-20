@@ -107,17 +107,17 @@ func mainLoop(rdr reader.LogReader, transport *http.Transport) {
 		}
 
 		httpWg.Add(1)
-		go fireHTTPRequest(client, rec.Method, rec.URL, rec.Payload)
+		go fireHTTPRequest(client, rec.Method, rec.URL, rec.Payload, rec.UA)
 	}
 }
 
-func fireHTTPRequest(client *http.Client, method string, url string, payload string) {
+func fireHTTPRequest(client *http.Client, method string, url string, payload string, ua string) {
 	defer httpWg.Done()
 
 	path := prefix + url
 
 	if debug {
-		log.Printf("Querying %s %s %s\n", method, path, payload)
+		log.Printf("Querying %s %s %s\n", method, path, payload, ua)
 	}
 
 	var logMessage string
@@ -146,7 +146,7 @@ func fireHTTPRequest(client *http.Client, method string, url string, payload str
 		return
 	}
 
-	req.Header.Set("User-Agent", "Log Replay (github.com/Gonzih/log-replay)")
+	req.Header.Set("User-Agent", ua)
 
 	resp, err := client.Do(req)
 

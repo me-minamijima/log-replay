@@ -13,6 +13,7 @@ type LogEntry struct {
 	Method  string
 	URL     string
 	Payload string
+	UA string
 }
 
 // LogReader provides generic log parser interface
